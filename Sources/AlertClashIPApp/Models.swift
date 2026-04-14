@@ -23,6 +23,84 @@ extension StatusTone {
     }
 }
 
+struct ClashGroupSelection: Equatable, Codable {
+    let groupName: String
+    let selectedProxy: String
+}
+
+enum ClashConnectionStatus: Equatable {
+    case disabled
+    case connected
+    case unreachable(String)
+}
+
+struct ClashRuntimeState: Equatable {
+    let connectionStatus: ClashConnectionStatus
+    let selections: [ClashGroupSelection]
+
+    static let disabled = ClashRuntimeState(connectionStatus: .disabled, selections: [])
+    static func unreachable(_ reason: String) -> ClashRuntimeState {
+        ClashRuntimeState(connectionStatus: .unreachable(reason), selections: [])
+    }
+
+    var primarySelection: ClashGroupSelection? {
+        return selections.first
+    }
+
+    func selection(forGroupName groupName: String) -> ClashGroupSelection? {
+        let trimmedGroupName = groupName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedGroupName.isEmpty else {
+            return nil
+        }
+
+        if let exactMatch = selections.first(where: { $0.groupName == trimmedGroupName }) {
+            return exactMatch
+        }
+
+        return selections.first {
+            $0.groupName.compare(trimmedGroupName, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+        }
+    }
+
+    var primaryProxyName: String? {
+        primarySelection?.selectedProxy
+    }
+
+    var summaryLine: String {
+        switch connectionStatus {
+        case .disabled:
+            return "Clash API：未启用"
+        case .connected:
+            if let primarySelection {
+                return "当前策略组：\(primarySelection.groupName) -> \(primarySelection.selectedProxy)"
+            }
+            return "Clash API：已连接"
+        case .unreachable(let reason):
+            return "Clash API：连接失败（\(reason)）"
+        }
+    }
+
+    var detailLines: [String] {
+        switch connectionStatus {
+        case .disabled:
+            return []
+        case .connected:
+            return selections
+                .filter { $0 != primarySelection }
+                .prefix(4)
+                .map { "\($0.groupName) -> \($0.selectedProxy)" }
+        case .unreachable(let reason):
+            return ["Clash API 错误：\(reason)"]
+        }
+    }
+
+    var signature: String {
+        selections
+            .map { "\($0.groupName)=\($0.selectedProxy)" }
+            .joined(separator: "|")
+    }
+}
+
 enum MonitorStatus: Equatable, Codable {
     case idle
     case healthy(currentIP: String)

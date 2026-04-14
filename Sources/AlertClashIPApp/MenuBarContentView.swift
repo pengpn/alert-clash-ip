@@ -142,6 +142,7 @@ struct MenuBarContentView: View {
                 Text("检查频率：每 \(model.settings.checkIntervalMinutes) 分钟一次")
                 Text("重复提醒：异常持续时每 \(model.settings.escalationIntervalMinutes) 分钟提醒一次")
                 Text("通知权限：\(model.notificationStatusDescription)")
+                clashStatusSection
 
                 if let lastCheckedAt = model.monitorService.snapshot.lastCheckedAt {
                     Text("上次检查：\(Self.dateFormatter.string(from: lastCheckedAt))")
@@ -187,6 +188,29 @@ struct MenuBarContentView: View {
             return .orange
         case .error:
             return .red
+        }
+    }
+
+    @ViewBuilder
+    private var clashStatusSection: some View {
+        let monitoredGroupName = model.settings.trimmedClashMonitoredGroupName
+        let runtimeState = model.monitorService.clashRuntimeState
+
+        switch runtimeState.connectionStatus {
+        case .disabled:
+            Text("Clash API：未启用")
+        case .unreachable(let reason):
+            Text("Clash API：连接失败（\(reason)）")
+        case .connected:
+            Text("监控策略组：\(monitoredGroupName.isEmpty ? "尚未设置" : monitoredGroupName)")
+
+            if let matchedSelection = runtimeState.selection(forGroupName: monitoredGroupName) {
+                Text("当前节点：\(matchedSelection.selectedProxy)")
+            } else if monitoredGroupName.isEmpty {
+                Text("当前节点：请先填写要监控的策略组名称")
+            } else {
+                Text("当前节点：未找到策略组“\(monitoredGroupName)”")
+            }
         }
     }
 }

@@ -8,6 +8,10 @@ final class SettingsStore: ObservableObject {
         static let checkIntervalMinutes = "settings.checkIntervalMinutes"
         static let escalationIntervalMinutes = "settings.escalationIntervalMinutes"
         static let launchAtLogin = "settings.launchAtLogin"
+        static let clashControllerURL = "settings.clashControllerURL"
+        static let clashSecret = "settings.clashSecret"
+        static let clashFastDetectionEnabled = "settings.clashFastDetectionEnabled"
+        static let clashMonitoredGroupName = "settings.clashMonitoredGroupName"
         static let monitorSnapshot = "runtime.monitorSnapshot"
     }
 
@@ -27,6 +31,22 @@ final class SettingsStore: ObservableObject {
         didSet { persist() }
     }
 
+    @Published var clashControllerURL: String {
+        didSet { persist() }
+    }
+
+    @Published var clashSecret: String {
+        didSet { persist() }
+    }
+
+    @Published var clashFastDetectionEnabled: Bool {
+        didSet { persist() }
+    }
+
+    @Published var clashMonitoredGroupName: String {
+        didSet { persist() }
+    }
+
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -40,6 +60,14 @@ final class SettingsStore: ObservableObject {
         self.escalationIntervalMinutes = max(1, storedEscalation ?? 30)
 
         self.launchAtLogin = defaults.bool(forKey: Keys.launchAtLogin)
+        self.clashControllerURL = defaults.string(forKey: Keys.clashControllerURL) ?? "http://127.0.0.1:9097"
+        self.clashSecret = defaults.string(forKey: Keys.clashSecret) ?? "123456"
+        if defaults.object(forKey: Keys.clashFastDetectionEnabled) == nil {
+            self.clashFastDetectionEnabled = true
+        } else {
+            self.clashFastDetectionEnabled = defaults.bool(forKey: Keys.clashFastDetectionEnabled)
+        }
+        self.clashMonitoredGroupName = defaults.string(forKey: Keys.clashMonitoredGroupName) ?? "虎云"
     }
 
     var trimmedTargetIP: String {
@@ -48,6 +76,18 @@ final class SettingsStore: ObservableObject {
 
     var isTargetIPValid: Bool {
         IPValidation.isValidIPAddress(trimmedTargetIP)
+    }
+
+    var trimmedClashControllerURL: String {
+        clashControllerURL.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var trimmedClashSecret: String {
+        clashSecret.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var trimmedClashMonitoredGroupName: String {
+        clashMonitoredGroupName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     func loadSnapshot() -> MonitorSnapshot {
@@ -73,5 +113,9 @@ final class SettingsStore: ObservableObject {
         defaults.set(max(1, checkIntervalMinutes), forKey: Keys.checkIntervalMinutes)
         defaults.set(max(1, escalationIntervalMinutes), forKey: Keys.escalationIntervalMinutes)
         defaults.set(launchAtLogin, forKey: Keys.launchAtLogin)
+        defaults.set(trimmedClashControllerURL, forKey: Keys.clashControllerURL)
+        defaults.set(trimmedClashSecret, forKey: Keys.clashSecret)
+        defaults.set(clashFastDetectionEnabled, forKey: Keys.clashFastDetectionEnabled)
+        defaults.set(trimmedClashMonitoredGroupName, forKey: Keys.clashMonitoredGroupName)
     }
 }

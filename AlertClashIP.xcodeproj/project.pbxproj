@@ -18,6 +18,7 @@
 		A10000000000000000000009 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* SettingsStore.swift */; };
 		A1000000000000000000000A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* SettingsView.swift */; };
 		A1000000000000000000000D /* WindowAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* WindowAccessor.swift */; };
+		A1000000000000000000000E /* ClashAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* ClashAPIService.swift */; };
 		A1000000000000000000000B /* MonitorDecisionEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* MonitorDecisionEngineTests.swift */; };
 		A1000000000000000000000C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000F /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -49,6 +50,7 @@
 		A2000000000000000000000E /* AlertClashIPAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlertClashIPAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000000000000000000000F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A20000000000000000000010 /* WindowAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessor.swift; sourceTree = "<group>"; };
+		A20000000000000000000011 /* ClashAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClashAPIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				A20000000000000000000009 /* SettingsStore.swift */,
 				A2000000000000000000000A /* SettingsView.swift */,
 				A20000000000000000000010 /* WindowAccessor.swift */,
+				A20000000000000000000011 /* ClashAPIService.swift */,
 			);
 		};
 		A70000000000000000000003 /* AlertClashIPAppTests */ = {
@@ -234,6 +237,7 @@
 				A10000000000000000000009 /* SettingsStore.swift in Sources */,
 				A1000000000000000000000A /* SettingsView.swift in Sources */,
 				A1000000000000000000000D /* WindowAccessor.swift in Sources */,
+				A1000000000000000000000E /* ClashAPIService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

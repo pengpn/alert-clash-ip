@@ -28,6 +28,7 @@ final class AppModel: ObservableObject {
         let monitorService = MonitorService(
             settings: settings,
             ipLookupService: IPLookupService(),
+            clashAPIService: ClashAPIService(),
             notificationService: notificationService
         )
 
